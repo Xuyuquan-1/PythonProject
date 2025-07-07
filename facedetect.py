@@ -18,16 +18,21 @@ def get_file_content(file_path):
 
 def detect_face(base):
     client = AipFace(APP_ID, API_KEY, SECRET_KEY)
-    options = {'face_field': 'beauty'}
+    param_list = ['beauty','age','face_shape']
+    options = {'face_field': param_list[0]+','+param_list[1]+','+param_list[2]}
     json = client.detect(base, 'BASE64', options)
     return json
 
+# 返回胭脂平均值，年龄平均值，出现最多的脸型
 def classify():
     root_dir = 'bing_img'
     file_list = os.listdir(root_dir)
     print(file_list)
 
-    count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    res = {'beauty':None, 'age': None, 'face_shape':None}
+    temp_beau = []
+    temp_age = []
+    temp_face = {}
 
     for i in file_list:
         path = root_dir + '/' + i
@@ -36,35 +41,46 @@ def classify():
         if os.path.isfile(path):
             base = get_file_content(path)
             json = detect_face(base)
-            beauty = parse_json(json)
+            # print(json)
+            lis = parse_json(json)
 
 
 
-            if beauty == -1:
-                count[0] += 1
+            if lis == -1:
+                pass
             else:
-                count[beauty] += 1
-            dic = root_dir + '/' + str(beauty)
+                temp_beau.append(lis['beauty'])
+                temp_age.append(lis['age'])
+                temp_face[lis['face_shape']['type']] = temp_face.get(lis['face_shape']['type'], 0) + 1
+            dic = root_dir + '/' + str(lis['beauty'])
             if not os.path.exists(dic):
                 os.makedirs(dic)
             os.rename(path, dic + '/' + i)
-    return count
 
-def parse_json(json)->int:
+    res['beauty'] = sum(temp_beau) / len(temp_beau) if temp_beau else 0
+    res['age'] = sum(temp_age) / len(temp_age) if temp_age else 0
+    res['face_shape'] = max(temp_face, key=temp_face.get)
+    print("res: ",res)
+    return res
+
+def parse_json(json):
     code = json['error_code']
+
+    list_dic = {'beauty': None,'age': None, 'face_shape' :None}
+
+
     if code == 0:
-        beauty = int(json['result']['face_list'][0]['beauty']/10)+1
+        list_dic['beauty'] = int(json['result']['face_list'][0]['beauty']/10)+1
+        list_dic['age'] = int(json['result']['face_list'][0]['age'])
+        list_dic['face_shape'] = json['result']['face_list'][0]['face_shape']
     else:
-        beauty = -1
-    return beauty
+        return -1
+    # print("list_dic :",list_dic)
+    return list_dic
 
 
 if __name__ == '__main__':
     keyword = input('请输入爬取的关键字')
-    bing_image_crawler(keyword, 100)
-    # base = get_file_content('./bing_img/000002.jpg')
-    # json = detect_face(base)
-    # beauty = parse_json(json)
-    # print(beauty)
-    count = classify()
-    print("beauty: ",count)
+    list = bing_image_crawler(keyword, 10)
+    result = classify()
+    print("result:",result)
