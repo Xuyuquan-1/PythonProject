@@ -3,7 +3,7 @@ from drawcharts import draw_charts
 from facedetect import classify_all as classify
 from dbutils import save_data2db
 from PyQt6.QtCore import QThread, pyqtSignal
-from select_data import select_AgeBdata,select_FaceBdata,select_Beautydata
+from select_data import select_AgeBdata,select_FaceBdata,select_Beautydata,select_Namedata
 import webbrowser
 
 class WorkerThread(QThread):
@@ -18,11 +18,11 @@ class WorkerThread(QThread):
 
         print("calculate start!")
         keyword = self.keyword_
-        bing_image_crawler(keyword, 5, self.window)
+        bing_image_crawler(keyword, 10, self.window)
         lis = classify(keyword, self.window)
         print("crawler result: ", lis)
         save_data2db(keyword, lis, self.window)
-        file = draw_charts(select_AgeBdata(),select_FaceBdata(),select_Beautydata())
+        file = draw_charts(select_AgeBdata(),select_FaceBdata(),select_Namedata(),select_Beautydata())
         webbrowser.open(file)
         print("result: ",lis)
 

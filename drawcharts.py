@@ -1,14 +1,19 @@
+from collections import Counter
+
+from pyecharts.charts.basic_charts import wordcloud
 from pyecharts.commons.utils import JsCode
+from pyecharts.globals import SymbolType
 
 from select_data import select_AgeBdata
 from select_data import select_FaceBdata
 from select_data import select_Beautydata
+from select_data import select_Namedata
 
 from pyecharts import options as opts
-from pyecharts.charts import Scatter, Pie, Page, Radar
+from pyecharts.charts import Scatter, Pie, Page, Radar, WordCloud, Line
 
 
-def draw_charts(rows_AgeB,rows_Shape,rows_Beauty):
+def draw_charts(rows_AgeB,rows_Shape,rows_Name,rows_Beauty):
 
     """
     画散点图
@@ -120,11 +125,62 @@ def draw_charts(rows_AgeB,rows_Shape,rows_Beauty):
     pie.chart_id='3e3b9d9744df4dbfbea1f8f5c57877f7'
 
 
+    # 提取商家名称和对应月份数据
+    merchants = [row[0] for row in rows_Beauty]  # 商家名称列表
+    monthly_data = [list(map(int, row[1:])) for row in rows_Beauty]  # 转换数值为整数
+
+    # 定义X轴标签（根据列名映射）
+    x_labels = ['two', 'four', 'six', 'eight', 'nine', 'ten']
+
+    # 创建折线图对象
+    line = (
+        Line()
+        .add_xaxis(x_labels)  # 设置X轴为月份
+    )
+
+    # 动态添加每个商家的数据序列
+    for merchant, data in zip(merchants, monthly_data):
+        line.add_yaxis(
+            # title=merchant,
+            series_name=merchant,
+            y_axis=data,
+            is_smooth=True,  # 启用曲线平滑
+            label_opts=opts.LabelOpts(is_show=False)  # 隐藏数据标签
+        )
+
+    # 全局配置项
+    line.set_global_opts(
+        title_opts=opts.TitleOpts(title="颜值数据趋势分析"),
+        tooltip_opts=opts.TooltipOpts(trigger='axis'),  # 坐标轴触发提示框
+        xaxis_opts=opts.AxisOpts(type_='category', boundary_gap=False),  # 类目轴非断点
+        yaxis_opts=opts.AxisOpts(name='数目'),  # Y轴名称
+        datazoom_opts=[opts.DataZoomOpts(type_='slider')]  # 添加缩放组件
+    )
+
+    line.chart_id='ac768466652c467387ca0f0843ea1e9e'
+
+    data=[]
+    for row in rows_Name:
+        data.append((row[0],rows_Name.count(row)))
+
+
+    wordcloud=(
+        WordCloud()
+        .add(series_name="人名展示", data_pair=data, word_size_range=[6, 66])
+        .set_global_opts(
+            title_opts=opts.TitleOpts(
+                title="人名展示", title_textstyle_opts=opts.TextStyleOpts(font_size=23)
+            ),
+            tooltip_opts=opts.TooltipOpts(is_show=True),
+        )
+    )
+
+    wordcloud.chart_id='ac768466652c467387ca0f0843ea1e9g'
 
     # 创建一个网页对象
     page = Page(layout=Page.DraggablePageLayout)  # 参数为可拖拽
     # 把统计添加到一个网页中，如果有多张图可以一直添加
-    page.add(scatter, pie)
+    page.add(scatter, pie,line,wordcloud)
     # 生成网页
     page.render('charts.html')
     # 加载JSON数据，重新改变布局
@@ -139,8 +195,11 @@ def draw_charts(rows_AgeB,rows_Shape,rows_Beauty):
 
 
 
+
 if __name__ == '__main__':
     rows1 = select_AgeBdata()
     rows2 = select_FaceBdata()
-    file = draw_charts(rows1,rows2)
+    rows3 = select_Namedata()
+    rows4 = select_Beautydata()
+    file = draw_charts(rows1,rows2,rows3,rows4)
 

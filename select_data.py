@@ -41,7 +41,19 @@ def select_Beautydata():
     return rows_Beauty
 
 
+def select_Namedata():
+    conn = sqlite3.connect('data_analyze.db')
+    cursor = conn.cursor()
+    sql='select keyword from beauty;'
+    cursor.execute(sql)
+    rows_Name = cursor.fetchall()  # 拿到所有查询结果
+
+    cursor.close()
+    conn.close()
+    return rows_Name
+
 if __name__ == '__main__':
     rows_AgeB=select_AgeBdata()
     rows_Shape=select_FaceBdata()
     rows_Beauty=select_Beautydata()
+    rows_Name=select_Namedata()
