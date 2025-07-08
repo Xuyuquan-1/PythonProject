@@ -24,7 +24,7 @@ def detect_face(base):
     return json
 
 # 返回胭脂平均值，年龄平均值，出现最多的脸型
-def classify_all():
+def classify_all(keyword, window):
     root_dir = 'bing_img'
     file_list = os.listdir(root_dir)
     print(file_list)
@@ -33,6 +33,8 @@ def classify_all():
     temp_beau = [0,0,0,0,0,0,0,0,0,0,0]
     temp_age = []
     temp_face = {}
+
+    window.result_display.append(f"开始进行{keyword}的人脸检测...")
 
     for i in file_list:
         path = root_dir + '/' + i
@@ -63,6 +65,7 @@ def classify_all():
     res['age'] = sum(temp_age) / len(temp_age) if temp_age else 0
     res['face_shape'] = max(temp_face, key=temp_face.get) if temp_face else None
     print("res: ",res)
+    window.result_display.append("人脸检测结束")
     return res
 
 def face_filter(json):

@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 
 # 导入计算模块（示例）
-from calculator import calculate
+from calculator import WorkerThread
 
 
 class CalculatorApp(QWidget):
@@ -22,14 +22,14 @@ class CalculatorApp(QWidget):
         input_layout = QHBoxLayout()
         self.input_label = QLabel("输入数值:")
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("请输入数字")
+        self.input_field.setPlaceholderText("请输入关键字")
         input_layout.addWidget(self.input_label)
         input_layout.addWidget(self.input_field)
         main_layout.addLayout(input_layout)
 
         # 按钮区域
         button_layout = QHBoxLayout()
-        self.calculate_button = QPushButton("计算")
+        self.calculate_button = QPushButton("获取数据")
         self.clear_button = QPushButton("清空")
         button_layout.addWidget(self.calculate_button)
         button_layout.addWidget(self.clear_button)
@@ -49,9 +49,14 @@ class CalculatorApp(QWidget):
         self.clear_button.clicked.connect(self.on_clear)
 
         # 设置窗口属性
-        self.setWindowTitle('PyQt6计算器应用')
+        self.setWindowTitle('人脸检测窗体小程序')
         self.setGeometry(300, 300, 500, 400)
         self.show()
+
+    def on_operation_finished(self, result):
+        # 这个函数在主线程中执行，可以安全地更新UI
+        self.result_display.append(result)
+        self.calculate_button.setEnabled(True)
 
     def on_calculate(self):
         """处理计算按钮点击事件"""
@@ -62,19 +67,21 @@ class CalculatorApp(QWidget):
             return
 
         try:
-            # 将输入转换为浮点数
-            value = float(input_text)
-
             # 调用计算模块进行计算
-            result = calculate(value)
+            self.calculate_button.setEnabled(False)
+
+            self.thread = WorkerThread(input_text, self)
+            self.thread.finished.connect(self.on_operation_finished)
+            self.thread.start()
+
 
             # 显示计算结果
-            self.result_display.append(f"输入值: {value}")
-            self.result_display.append(f"计算结果: {result}")
+            self.result_display.append(f"输入值: {input_text}")
+            # self.result_display.append(f"结果: {result}")
             self.result_display.append("-" * 50)
 
         except ValueError:
-            self.result_display.append("错误: 请输入有效的数字")
+            self.result_display.append("错误: 请输入有效的值")
 
     def on_clear(self):
         """处理清空按钮点击事件"""

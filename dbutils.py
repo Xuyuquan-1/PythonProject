@@ -17,8 +17,9 @@ def check_exist(cursor, keyword):
     return result
 
 
-def save_data2db(keyword, dic):
+def save_data2db(keyword, dic, window):
 
+    db_message = ""
 
     conn = sqlite3.connect('data_analyze.db')
     cursor = conn.cursor()
@@ -82,6 +83,10 @@ def save_data2db(keyword, dic):
     cursor.execute(sql_shape)
 
     results = check_exist(cursor, keyword)
+    if results:
+        window.result_display.append(f"查询到{keyword}的数据，即将进行更新...")
+    else:
+        window.result_display.append(f"未查询到{keyword}的数据，即将进行插入...")
 
     for result in results:
         print("db_result: ",result)
@@ -115,6 +120,7 @@ def save_data2db(keyword, dic):
 
         cursor.execute(sql_shape, param_shape)
         conn.commit()
+        window.result_display.append(f"插入完成")
 
     elif results:
         # beauty 的更新
@@ -162,6 +168,10 @@ def save_data2db(keyword, dic):
 
         cursor.execute(sql_shape, param_shape[1:] + param_shape[:1])
         conn.commit()
+        window.result_display.append(f"更新完成")
+
+
+    return db_message
 
 
 

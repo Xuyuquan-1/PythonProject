@@ -12,14 +12,14 @@ import sys
 
 
 if __name__ == '__main__':
-    # app = QApplication(sys.argv)
-    # window = CalculatorApp()
-    # sys.exit(app.exec())
+    app = QApplication(sys.argv)
+    window = CalculatorApp()
+    sys.exit(app.exec())
 
-    keyword = input('请输入爬取的关键字')
-    bing_image_crawler(keyword, 5)
-    count = classify()
-    save_data2db(keyword, count)
-    file = draw_charts(keyword, count)
-    webbrowser.open(file)
-    print("beauty: ",count)
+    # keyword = input('请输入爬取的关键字')
+    # bing_image_crawler(keyword, 5)
+    # count = classify()
+    # save_data2db(keyword, count)
+    # file = draw_charts(keyword, count)
+    # webbrowser.open(file)
+    # print("beauty: ",count)
