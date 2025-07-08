@@ -76,7 +76,7 @@ class CalculatorApp(QWidget):
 
 
             # 显示计算结果
-            self.result_display.append(f"输入值: {input_text}")
+            self.result_display.append(f"输入: {input_text}")
             # self.result_display.append(f"结果: {result}")
             self.result_display.append("-" * 50)
 

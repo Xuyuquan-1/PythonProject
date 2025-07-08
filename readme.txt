@@ -10,3 +10,9 @@ git config --global --unset https.proxy
 尝试通过下面的配置关闭ssl证书检验：
 git config --global http.sslVerify false
 
+软件依赖：
+pyecharts:2.08
+icrawler:0.6.10
+baidu-aip:4.16.13
+chardet:5.2.0
+PyQt6:6.7.1

@@ -3,6 +3,7 @@ from drawcharts import draw_charts
 from facedetect import classify_all as classify
 from dbutils import save_data2db
 from PyQt6.QtCore import QThread, pyqtSignal
+from select_data import select_AgeBdata,select_FaceBdata,select_Beautydata
 import webbrowser
 
 class WorkerThread(QThread):
@@ -21,7 +22,7 @@ class WorkerThread(QThread):
         lis = classify(keyword, self.window)
         print("crawler result: ", lis)
         save_data2db(keyword, lis, self.window)
-        file = draw_charts(keyword, lis)
+        file = draw_charts(select_AgeBdata(),select_FaceBdata(),select_Beautydata())
         webbrowser.open(file)
         print("result: ",lis)
 

@@ -1,0 +1,62 @@
+[
+    {
+        "cid": "ac768466652c467387ca0f0843ea1e9f",
+        "width": "45%",
+        "height": "45%",
+        "top": "5%",
+        "left": "5%",
+        "style": {
+            "boxShadow": "0 8px 32px rgba(0, 0, 0, 0.3)",
+            "borderRadius": "15px",
+            "border": "1px solid rgba(255, 255, 255, 0.2)",
+            "background": "linear-gradient(145deg, rgba(84,112,198,0.1), rgba(145,204,117,0.1))",
+            "transition": "all 0.5s ease",
+            "zIndex": 10
+        }
+    },
+    {
+        "cid": "3e3b9d9744df4dbfbea1f8f5c57877f7",
+        "width": "45%",
+        "height": "45%",
+        "top": "5%",
+        "left": "50%",
+        "style": {
+            "boxShadow": "0 8px 32px rgba(0, 0, 0, 0.3)",
+            "borderRadius": "15px",
+            "border": "1px solid rgba(255, 255, 255, 0.2)",
+            "background": "linear-gradient(145deg, rgba(238,102,102,0.1), rgba(250,200,88,0.1))",
+            "transition": "all 0.5s ease",
+            "zIndex": 10
+        }
+    },
+    {
+        "cid": "ac768466652c467387ca0f0843ea1e9e",
+        "width": "45%",
+        "height": "45%",
+        "top": "50%",
+        "left": "5%",
+        "style": {
+            "boxShadow": "0 8px 32px rgba(0, 0, 0, 0.3)",
+            "borderRadius": "15px",
+            "border": "1px solid rgba(255, 255, 255, 0.2)",
+            "background": "linear-gradient(145deg, rgba(115,192,222,0.1), rgba(154,96,180,0.1))",
+            "transition": "all 0.5s ease",
+            "zIndex": 10
+        }
+    },
+    {
+        "cid": "ac768466652c467387ca0f0843ea1e9g",
+        "width": "45%",
+        "height": "45%",
+        "top": "50%",
+        "left": "50%",
+        "style": {
+            "boxShadow": "0 8px 32px rgba(0, 0, 0, 0.3)",
+            "borderRadius": "15px",
+            "border": "1px solid rgba(255, 255, 255, 0.2)",
+            "background": "linear-gradient(145deg, rgba(0,0,0,0.05), rgba(0,0,0,0.15))",
+            "transition": "all 0.5s ease",
+            "zIndex": 10
+        }
+    }
+]
