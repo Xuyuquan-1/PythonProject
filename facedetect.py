@@ -24,13 +24,13 @@ def detect_face(base):
     return json
 
 # 返回胭脂平均值，年龄平均值，出现最多的脸型
-def classify():
+def classify_all():
     root_dir = 'bing_img'
     file_list = os.listdir(root_dir)
     print(file_list)
 
     res = {'beauty':None, 'age': None, 'face_shape':None}
-    temp_beau = []
+    temp_beau = [0,0,0,0,0,0,0,0,0,0,0]
     temp_age = []
     temp_face = {}
 
@@ -49,7 +49,7 @@ def classify():
             if lis == -1:
                 pass
             else:
-                temp_beau.append(lis['beauty'])
+                temp_beau[lis['beauty']] += 1
                 temp_age.append(lis['age'])
                 temp_face[lis['face_shape']['type']] = temp_face.get(lis['face_shape']['type'], 0) + 1
             dic = root_dir + '/' + str(lis['beauty'])
@@ -57,7 +57,7 @@ def classify():
                 os.makedirs(dic)
             os.rename(path, dic + '/' + i)
 
-    res['beauty'] = sum(temp_beau) / len(temp_beau) if temp_beau else 0
+    res['beauty'] = temp_beau
     res['age'] = sum(temp_age) / len(temp_age) if temp_age else 0
     res['face_shape'] = max(temp_face, key=temp_face.get)
     print("res: ",res)
@@ -79,8 +79,10 @@ def parse_json(json):
     return list_dic
 
 
+
+
 if __name__ == '__main__':
     keyword = input('请输入爬取的关键字')
     list = bing_image_crawler(keyword, 10)
-    result = classify()
+    result = classify_all()
     print("result:",result)
