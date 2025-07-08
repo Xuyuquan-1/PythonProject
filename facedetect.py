@@ -42,26 +42,40 @@ def classify_all():
             base = get_file_content(path)
             json = detect_face(base)
             # print(json)
+
             lis = parse_json(json)
 
 
 
-            if lis == -1:
-                pass
+            if lis == -1 or (face_filter(json) == False):
+                dic = root_dir + '/' + '-1'
             else:
                 temp_beau[lis['beauty']] += 1
                 temp_age.append(lis['age'])
                 temp_face[lis['face_shape']['type']] = temp_face.get(lis['face_shape']['type'], 0) + 1
-            dic = root_dir + '/' + str(lis['beauty'])
+                dic = root_dir + '/' + str(lis['beauty'])
+
             if not os.path.exists(dic):
                 os.makedirs(dic)
             os.rename(path, dic + '/' + i)
 
     res['beauty'] = temp_beau
     res['age'] = sum(temp_age) / len(temp_age) if temp_age else 0
-    res['face_shape'] = max(temp_face, key=temp_face.get)
+    res['face_shape'] = max(temp_face, key=temp_face.get) if temp_face else None
     print("res: ",res)
     return res
+
+def face_filter(json):
+    # 1.通过欧拉角筛选侧脸
+    # 滚转角，俯仰角，偏航角
+    roll  = json['result']['face_list'][0]['angle']['roll']
+    pitch = json['result']['face_list'][0]['angle']['pitch']
+    yaw   = json['result']['face_list'][0]['angle']['yaw']
+    if (roll>30 or roll < -30) or (pitch > 30 or pitch < -30) or (yaw > 30 or yaw < -30):
+        return False
+    return True
+
+
 
 def parse_json(json):
     code = json['error_code']
